@@ -10,7 +10,7 @@ if (isset($_POST['baseUrl']) && isset($_POST['username']) && isset($_POST['passw
     $password = urldecode($_POST['password']);
     $command = urldecode($_POST['command']);
     if (array_key_exists("arguments", $_POST)) {
-        $arguments = urldecode($_POST['arguments']);
+        $arguments = escapeshellarg(urldecode($_POST['arguments']));
     } else {
         $arguments = null;
     }
@@ -21,7 +21,7 @@ if (isset($_POST['baseUrl']) && isset($_POST['username']) && isset($_POST['passw
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
             exec(
-                escapeCommand($magentoBinary . ' ' . $command) . " $arguments" ." 2>&1",
+                escapeCommand($magentoBinary . " $command" . " $arguments") . " 2>&1",
                 $output,
                 $exitCode
             );
