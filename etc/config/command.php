@@ -54,9 +54,10 @@ if (isset($_POST['baseUrl']) && isset($_POST['username']) && isset($_POST['passw
  */
 function isAuthenticated($baseUrl, $username, $password)
 {
-    $userData = [
-        "username" => $username,
-        "password" => $password
+    $userData = ["username" => $username, "password" => $password];
+    $headers = [
+        "Content-Type: application/json",
+        "Content-Lenght: " . strlen(json_encode($userData))
     ];
     $ch = curl_init($baseUrl . "/index.php/rest/V1/integration/admin/token");
     curl_setopt($ch, CURLOPT_POST, true);
@@ -66,11 +67,7 @@ function isAuthenticated($baseUrl, $username, $password)
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_COOKIEFILE, '');
-    curl_setopt(
-        $ch,
-        CURLOPT_HTTPHEADER,
-        array("Content-Type: application/json", "Content-Lenght: " . strlen(json_encode($userData)))
-    );
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
     $token = curl_exec($ch);
 
