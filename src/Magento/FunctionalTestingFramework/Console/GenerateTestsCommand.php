@@ -100,22 +100,56 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
         $testConfiguration = $this->createTestConfiguration($json, $tests, $force, $debug, $verbose);
 
+        // METRICS GATHERING
+        $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+        $totalTests = 0;
+        $skippedTests = 0;
+        $skippedTestName = [];
+        $skippedTestName[] = "MODULE|TESTCASEID|TESTNAME|SKIPPEDIDS";
+        foreach ($testObjects as $testObject) {
+            $totalTests++;
+            if ($testObject->isSkipped()){
+                $skippedTests++;
+                $testCaseId = $testObject->getAnnotations()['testCaseId'] ?? ['NONE'];
+                $skipString = "";
+                $issues = $testObject->getAnnotations()['skip'] ?? null;
+                if (isset($issues)) {
+                    $skipString .= implode(",", $issues);
+                } else {
+                    $skipString .= "NO ISSUES SPECIFIED";
+                }
+                $skippedTestName[] = $testObject->getAnnotations()['features'][0]
+                    ."|" . $testCaseId[0]
+                    ."|" . $testObject->getName()
+                    ."|" . $skipString;
+            }
+        }
+        print (PHP_EOL . "TOTAL TESTS (INCLUDING SKIPPED): {$totalTests}");
+        print (PHP_EOL . "SKIPPED TESTS: {$skippedTests}");
+        print (PHP_EOL . "SKIPPED TESTS:" . PHP_EOL . implode(PHP_EOL, $skippedTestName));
+        print (PHP_EOL);
+        // END METRICS GATHERING
+
+
+
+
+
         // create our manifest file here
-        $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
-        TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
-
-        if ($config == 'parallel') {
-            /** @var ParallelTestManifest $testManifest */
-            $testManifest->createTestGroups($time);
-        }
-
-        if (empty($tests)) {
-            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
-        }
-
-        $testManifest->generate();
-
-        $output->writeln("Generate Tests Command Run");
+//        $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
+//        TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
+//
+//        if ($config == 'parallel') {
+//            /** @var ParallelTestManifest $testManifest */
+//            $testManifest->createTestGroups($time);
+//        }
+//
+//        if (empty($tests)) {
+//            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+//        }
+//
+//        $testManifest->generate();
+//
+//        $output->writeln("Generate Tests Command Run");
     }
 
     /**
