@@ -135,6 +135,7 @@ class CurlTransport implements CurlInterface
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_VERBOSE => true,
         ];
         switch ($method) {
             case CurlInterface::POST:
@@ -169,6 +170,10 @@ class CurlTransport implements CurlInterface
     public function read($successRegex = null, $returnRegex = null)
     {
         $response = curl_exec($this->getResource());
+
+        var_dump($response);
+        var_dump(curl_getinfo($this->getResource()));
+        var_dump(curl_error($this->getResource()));
 
         if ($response === false) {
             throw new TestFrameworkException(curl_error($this->getResource()));
