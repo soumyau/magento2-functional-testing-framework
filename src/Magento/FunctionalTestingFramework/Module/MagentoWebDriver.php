@@ -137,7 +137,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @return void
      */
-    public function _initialize()
+    public function _initialize ()
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
         parent::_initialize();
