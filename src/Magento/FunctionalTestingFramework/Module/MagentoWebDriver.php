@@ -47,9 +47,6 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHan
  *             browser: chrome
  * ```
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessivePublicCount)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class MagentoWebDriver extends WebDriver
 {
@@ -66,8 +63,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @var array
      */
-    protected $loadingMasksLocators = [
-        '//div[contains(@class, "loading-mask")]',
+    protected $loadingMasksLocators=['//div[contains(@class, "loading-mask")]',
         '//div[contains(@class, "admin_data-grid-loading-mask")]',
         '//div[contains(@class, "admin__data-grid-loading-mask")]',
         '//div[contains(@class, "admin__form-loading-mask")]',
@@ -141,7 +137,7 @@ class MagentoWebDriver extends WebDriver
      *
      * @return void
      */
-    public function _initialize()
+    public function _initialize ()
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
         parent::_initialize();
